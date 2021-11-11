@@ -1,6 +1,23 @@
+image: node:14-alpine
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - node_modules/
+
+install_dependencies:
+  stage: build
+  script:
+    - npm install
+  artifacts:
+    paths:
+      - node_modules/
+
 deploy-to-vercel:
   stage: deploy
-  image: node:14-alpine
 
   variables:
     PREVIEW_URL: $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_USER.vercel.app
@@ -15,6 +32,7 @@ deploy-to-vercel:
     name: vercel/$CI_COMMIT_REF_NAME
     url: https://$PREVIEW_URL
 
+    
   script:
     - npm i -g vercel
     - DEPLOYMENT_URL=$(VERCEL_ORG_ID=$VERCEL_ORG_ID VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID vercel --confirm -t $VERCEL_TOKEN --scope $VERCEL_SCOPE)
