@@ -1,0 +1,48 @@
+{
+  "name": "distributed_frontend_boilerplate",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prettier": "prettier -w '*/**/*.{js,ts,tsx}'",
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "next": "12.0.3",
+    "next-compose-plugins": "^2.2.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.7",
+    "@types/react": "17.0.34",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "eslint": "^8.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^11.2.6",
+    "prettier": "^2.2.1",
+    "typescript": "4.4.4"
+  },
+  "eslintIgnore": [
+    "node_modules",
+    "__generated__"
+  ],
+  "lint-staged": {
+    "*.+(js|jsx|ts|tsx)": [
+      "eslint --fix"
+    ],
+    "*.+(js|jsx|ts|tsx|json|css|md|mdx)": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
