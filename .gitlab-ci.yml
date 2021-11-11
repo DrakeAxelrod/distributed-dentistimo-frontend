@@ -1,23 +1,28 @@
 image: node:14-alpine
 
+# Cache modules in between jobs per-branch
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
 stages:
   - build
   - deploy
 
-cache:
-  paths:
-    - node_modules/
-
-install_dependencies:
+build:
   stage: build
+  tags:
+    - docker
   script:
+    - cd server
     - npm install
-  artifacts:
-    paths:
-      - node_modules/
 
-deploy-to-vercel:
+
+deploy:
   stage: deploy
+  tags:
+    - docker
 
   variables:
     PREVIEW_URL: $CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG.$VERCEL_USER.vercel.app
