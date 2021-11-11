@@ -1,5 +1,5 @@
 {
-  "name": "distributed_frontend_boilerplate",
+  "name": "group-16-frontend-distributed",
   "private": true,
   "scripts": {
     "dev": "next dev",
