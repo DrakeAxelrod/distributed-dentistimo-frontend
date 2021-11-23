@@ -20,6 +20,7 @@
       "@components": ["components"],
       "@public/*": ["public/*"],
       "@public": ["public"],
+      "@types/*": ["public"],
       "@styles/*": ["styles/*"],
       "@styles": ["styles"]
     },

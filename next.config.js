@@ -7,7 +7,7 @@ const plugins = [];
 const nextConfig = {
   webpack5: true,
   env: {
-    customKey: "my-value",
+    GOOGLE_MAP_API: process.env.GOOGLE_MAP_API,
   },
 };
 

@@ -5,33 +5,35 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prettier": "prettier -w '*/**/*.{js,ts,tsx}'",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
+    "lint": "next lint",
+    "prettier": "prettier --write ./**/*.{js,jsx,ts,tsx,json,scss}",
     "prepare": "husky install"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.7.2",
+    "@emotion/react": "^11.6.0",
+    "@emotion/styled": "^11.6.0",
+    "@fontsource/nunito": "^4.5.0",
+    "framer-motion": "^4.1.17",
+    "google-map-react": "^2.1.10",
     "next": "12.0.3",
     "next-compose-plugins": "^2.2.1",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^12.0.4",
+    "@types/google-map-react": "^2.1.3",
     "@types/node": "16.11.7",
     "@types/react": "17.0.34",
-    "@typescript-eslint/eslint-plugin": "^5.2.0",
-    "@typescript-eslint/parser": "^5.2.0",
-    "eslint": "^8.1.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint": "<8.0.0",
+    "eslint-config-next": "^12.0.4",
     "husky": "^7.0.4",
     "lint-staged": "^11.2.6",
     "prettier": "^2.2.1",
     "typescript": "4.4.4"
   },
-  "eslintIgnore": [
-    "node_modules",
-    "__generated__"
-  ],
   "lint-staged": {
     "*.+(js|jsx|ts|tsx)": [
       "eslint --fix"
