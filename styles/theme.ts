@@ -7,4 +7,13 @@ const config: ThemeConfig = {
 
 export const theme = extendTheme({
   ...config,
+  fonts: {
+    header: "Nunito",
+    h1: "Nunito",
+    h2: "Nunito",
+    h3: "Nunito",
+    h4: "Nunito",
+    h5: "Nunito",
+    a: "Nunito",
+  },
 });

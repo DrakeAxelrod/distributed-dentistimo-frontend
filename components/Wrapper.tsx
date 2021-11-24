@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Spacer } from "@chakra-ui/react";
 import { FC } from "react";
 import { MyWrapper } from "types";
 import { Header } from "@components/Header";
@@ -6,12 +6,13 @@ import Footer from "./Footer";
 
 export const Wrapper: FC<MyWrapper> = ({ children }) => {
   return (
-    <>
+    <Flex direction="column" minH="100vh" minW="100vw">
       <Header />
-      <Flex flexGrow={1} direction="row" w="full" h="full" justify="center">
+      <Flex minH="84vh" minW="100vw">
         {children}
       </Flex>
+      <Spacer />
       <Footer />
-    </>
+    </Flex>
   );
 };

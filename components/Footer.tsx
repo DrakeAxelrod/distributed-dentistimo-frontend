@@ -42,7 +42,7 @@ const Footer = () => {
       align="center"
       h="8vh"
       maxH="8vh"
-      minW="100%">
+      minW="100vw">
       <Copyright />
     </Flex>
   );

@@ -8,7 +8,7 @@ export type BookingResponse = {};
 
 export type BookingRequest = {};
 
-export type Dentist = {
+export type DentistClinic = {
   id: number;
   name: string;
   owner: string;

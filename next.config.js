@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const withPlugins = require("next-compose-plugins");
 
-const IS_DEV = process.env.NODE_ENV === "development"
-if (!DEV) {
+const IS_DEV = process.env.NODE_ENV === "development";
+if (!IS_DEV) {
   console.log = function () {};
 }
 
