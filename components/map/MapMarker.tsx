@@ -13,10 +13,8 @@ import {
   Heading,
   Box,
   Image,
-  Portal,
   chakra,
 } from "@chakra-ui/react";
-import { Marker, InfoWindow } from "@react-google-maps/api";
 
 type Props = {
   lat: number;
