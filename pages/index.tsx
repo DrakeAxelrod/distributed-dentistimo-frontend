@@ -11,7 +11,11 @@ type Props = {
 
 // homepage (just has an example component at the moment)
 const Home: FC<Props> = ({ clinics }) => {
-  return <Map clinics={clinics} />;
+  return (
+    <>
+      <Map clinics={clinics} />
+    </>
+  );
 };
 
 export const getStaticProps: GetStaticProps = async () => {

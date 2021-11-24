@@ -51,21 +51,24 @@ const MenuItem: FC<NavItem> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isLogin = props.type === Nav.Login;
   return (
-    <Button
-      onClick={onOpen}
-      variant="ghost"
-      color={color}
-      _hover={{
-        background: "transparent",
-        outline: "transparent",
-      }}
-      _active={{
-        background: "transparent",
-        outline: "transparent",
-      }}>
-      <Text fontSize="2xl" fontFamily="Nunito" color={color}>
-        {props.title}
-      </Text>
+    <>
+      <Button
+        onClick={onOpen}
+        variant="ghost"
+        color={color}
+        p={["0.25rem", "1rem"]}
+        _hover={{
+          background: "transparent",
+          outline: "transparent",
+        }}
+        _active={{
+          background: "transparent",
+          outline: "transparent",
+        }}>
+        <Text fontSize={["1rem", "2rem"]} fontFamily="Nunito" color={color}>
+          {props.title}
+        </Text>
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
         <ModalOverlay />
         <ModalContent>
@@ -107,16 +110,27 @@ const MenuItem: FC<NavItem> = (props) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </Button>
+    </>
   );
 };
 
 const Logo = () => {
   const color = useColorModeValue("teal.500", "teal.100");
   return (
-    <Flex py="1rem" align="center">
-      <Icon pl="1rem" h="3rem" w="3rem" as={FaTooth} color={color} />
-      <Heading as="h1" pl="1rem" fontFamily="Nunito" color={color}>
+    <Flex align="center">
+      <Box pl="1rem" />
+      <Icon
+        w={["1rem", "2rem"]}
+        h={["1rem", "2rem"]}
+        as={FaTooth}
+        color={color}
+      />
+      <Heading
+        as="h1"
+        pl="0.5rem"
+        fontFamily="Nunito"
+        color={color}
+        fontSize={["1rem", "2rem"]}>
         {"Dentistimo"}
       </Heading>
     </Flex>
@@ -125,15 +139,17 @@ const Logo = () => {
 
 export const Header = () => {
   return (
-    <Flex as="header" h="8vh" maxH="8vh" minW="100%">
-      <Logo />
-      <Spacer />
-      <Stack direction="row" align="center" px="1rem">
-        {NavItems.map(({ title, type }, index) => (
-          <MenuItem key={index} title={title} type={type} />
-        ))}
-        <ThemeToggle />
-      </Stack>
-    </Flex>
+    <Box as="header" m="0" p="0">
+      <Flex h="8vh" maxH="8vh" minW="100%">
+        <Logo />
+        <Spacer />
+        <Flex direction="row" align="center" pr="0.5rem">
+          {NavItems.map(({ title, type }, index) => (
+            <MenuItem key={index} title={title} type={type} />
+          ))}
+          <ThemeToggle />
+        </Flex>
+      </Flex>
+    </Box>
   );
 };

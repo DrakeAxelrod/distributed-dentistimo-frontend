@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Icon,
   Stack,
@@ -17,7 +18,7 @@ export const Copyright: FC = () => {
       as="p"
       align="center"
       fontWeight={900}
-      fontSize="xl"
+      fontSize={["1rem", "2rem"]}
       color={color}
       fontFamily="Nunito">
       <Icon as={RiCopyrightLine} />
@@ -35,16 +36,17 @@ export const Copyright: FC = () => {
 
 const Footer = () => {
   return (
-    <Flex
-      direction="column"
-      justify="space-around"
-      as="footer"
-      align="center"
-      h="8vh"
-      maxH="8vh"
-      minW="100vw">
-      <Copyright />
-    </Flex>
+    <Box as="footer">
+      <Flex
+        h="8vh"
+        w="full"
+        maxH="8vh"
+        minW="full"
+        align="center"
+        justify="center">
+        <Copyright />
+      </Flex>
+    </Box>
   );
 };
 

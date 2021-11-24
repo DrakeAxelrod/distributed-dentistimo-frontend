@@ -12,9 +12,11 @@ import {
   Stack,
   Heading,
   Box,
-  chakra,
   Image,
+  Portal,
+  chakra,
 } from "@chakra-ui/react";
+import { Marker, InfoWindow } from "@react-google-maps/api";
 
 type Props = {
   lat: number;
@@ -44,29 +46,29 @@ export const MyMarker: FC<Props> = ({ clinic, lat, lng, value }) => {
   const wednesday = openinghours.wednesday ? openinghours.wednesday : "Closed";
   const thursday = openinghours.thursday ? openinghours.thursday : "Closed";
   const friday = openinghours.friday ? openinghours.friday : "Closed";
-  const availSize = "md";
+  const availSize = "sm";
   return (
     <chakra.div {...markerProps}>
-      <Popover>
+      <Popover placement="right-end">
         <PopoverTrigger>
           <Image
             w="3rem"
             h="3rem"
             aria-label={`pin showing the location of ${clinic.name}`}
-            src="/location-icon/location.svg"
+            src="/pin.svg"
           />
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />
           <PopoverCloseButton />
-          <PopoverHeader fontSize="3xl">
+          <PopoverHeader fontSize="2xl">
             <Heading fontFamily="Nunito">{name}</Heading>
           </PopoverHeader>
           <PopoverBody>
             <Stack>
-              <Text fontSize="lg">Address: {address}</Text>
+              <Text fontSize="md">Address: {address}</Text>
               <Box as="hr" />
-              <Heading fontSize="lg">Availability</Heading>
+              <Heading fontSize="md">Availability</Heading>
               <Text fontSize={availSize}>Monday: {monday}</Text>
               <Text fontSize={availSize}>Tuesday: {tuesday}</Text>
               <Text fontSize={availSize}>Wednesday: {wednesday}</Text>

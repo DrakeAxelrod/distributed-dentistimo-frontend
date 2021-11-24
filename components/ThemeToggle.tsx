@@ -21,7 +21,7 @@ export const ThemeToggle: FC<ThemeToggleProps> = (props) => {
         outlineColor: "transparent",
         bgColor: "transparent",
       }}
-      mx="0.5rem"
+      ml="0.25rem"
       alignSelf="center"
       variant="ghost"
       color={color}
