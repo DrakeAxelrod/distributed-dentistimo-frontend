@@ -22,7 +22,8 @@
       "@public": ["public"],
       "@types/*": ["public"],
       "@styles/*": ["styles/*"],
-      "@styles": ["styles"]
+      "@styles": ["styles"],
+      "@lib/*": ["lib/*"]
     },
     "incremental": true
   },

@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { FaTooth } from "react-icons/fa";
 
-
 type MarkerProps = {
   lat: number;
   lng: number;
@@ -85,8 +84,7 @@ const Marker: FC<MarkerProps> = (props) => {
       </Popover>
     </div>
   );
-}
-
+};
 
 export const Map = () => {
   const key = process.env.GOOGLE_MAP_API;

@@ -1,7 +1,14 @@
-import { Flex, Icon, Stack, Text, TextProps, useColorModeValue } from "@chakra-ui/react"
+import {
+  Flex,
+  Icon,
+  Stack,
+  Text,
+  TextProps,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import { FC } from "react";
 import { RiCopyrightLine } from "react-icons/ri";
-import { GoPrimitiveDot } from "react-icons/go"
+import { GoPrimitiveDot } from "react-icons/go";
 
 export const Copyright: FC = () => {
   const color = useColorModeValue("teal.500", "teal.100");
@@ -26,13 +33,19 @@ export const Copyright: FC = () => {
   );
 };
 
-
 const Footer = () => {
   return (
-    <Flex direction="column" justify="space-around" as="footer" align="center" h="8vh" maxH="8vh" minW="100%">
+    <Flex
+      direction="column"
+      justify="space-around"
+      as="footer"
+      align="center"
+      h="8vh"
+      maxH="8vh"
+      minW="100%">
       <Copyright />
     </Flex>
   );
-}
+};
 
-export default Footer
+export default Footer;

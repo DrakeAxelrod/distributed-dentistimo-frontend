@@ -89,9 +89,11 @@ const MenuItem: FC<NavItem> = (props) => {
                   <Input type="password" placeholder="Enter your password" />
                 </FormControl>
                 <Stack isInline justifyContent="space-between" mt={4}>
-                  {isLogin ? <Box>
-                    <Checkbox>Remember Me</Checkbox>
-                  </Box> : null}
+                  {isLogin ? (
+                    <Box>
+                      <Checkbox>Remember Me</Checkbox>
+                    </Box>
+                  ) : null}
                   <Box>
                     <Link color="teal.500">Forgot your password?</Link>
                   </Box>
