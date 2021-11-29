@@ -1,16 +1,15 @@
 import { Connector } from "mqtt-react-hooks";
-import React, { FC } from "react";
+import { FC } from "react";
 import { MyWrapper } from "types";
 
-export const MqttConnector: FC<MyWrapper> = ({ children }) => {
+export const MqttWrapper: FC<MyWrapper> = ({ children }) => {
   return (
     <Connector
-      brokerUrl={process.env.BROKER_URI}
       options={{
+        hostname: process.env.BROKER_URI,
+        protocol: "ws",
         username: process.env.BROKER_USERNAME,
         password: process.env.BROKER_PASSWORD,
-        protocol: "ws",
-        port: 80,
       }}>
       {children}
     </Connector>

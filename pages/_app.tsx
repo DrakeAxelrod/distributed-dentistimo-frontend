@@ -5,21 +5,35 @@ import { Wrapper } from "@components/Wrapper";
 import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "@styles/theme";
-import { useMqttState } from "mqtt-react-hooks";
-import { MqttConnector } from "@components/MqttConnector";
+import { Connector, useMqttState } from "mqtt-react-hooks";
+import { MqttWrapper } from "@components/MqttWrapper";
+import { LoginForm } from "@components/Login";
+
+// helper to check that it workd
+const Status = () => {
+  /*
+   * Status list
+   * - Offline
+   * - Connected
+   * - Reconnecting
+   * - Closed
+   * - Error: printed in console too
+   */
+  const { connectionStatus } = useMqttState();
+
+  return <h1>{`Status: ${connectionStatus}`}</h1>;
+};
 
 // leave as is most likely
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const state = useMqttState();
-  log(state);
   //log(pageProps);
   return (
     <ChakraProvider resetCSS={true} theme={theme}>
-      <MqttConnector>
+      <MqttWrapper>
         <Wrapper>
           <Component {...pageProps} />
         </Wrapper>
-      </MqttConnector>
+      </MqttWrapper>
     </ChakraProvider>
   );
 };

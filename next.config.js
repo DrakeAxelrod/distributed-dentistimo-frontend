@@ -17,6 +17,7 @@ const nextConfig = {
     BROKER_URI: process.env.BROKER_URI,
     BROKER_USERNAME: process.env.BROKER_USERNAME,
     BROKER_PASSWORD: process.env.BROKER_PASSWORD,
+    BROKER_PORT: process.env.BROKER_PORT,
   },
 };
 
