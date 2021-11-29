@@ -15,6 +15,8 @@ const nextConfig = {
     GOOGLE_MAP_API: process.env.GOOGLE_MAP_API,
     IS_DEV: IS_DEV,
     BROKER_URI: process.env.BROKER_URI,
+    BROKER_USERNAME: process.env.BROKER_USERNAME,
+    BROKER_PASSWORD: process.env.BROKER_PASSWORD,
   },
 };
 
