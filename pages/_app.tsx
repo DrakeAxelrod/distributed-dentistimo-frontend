@@ -5,9 +5,8 @@ import { Wrapper } from "@components/Wrapper";
 import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "@styles/theme";
-import { Connector, useMqttState } from "mqtt-react-hooks";
+import { useMqttState } from "mqtt-react-hooks";
 import { MqttWrapper } from "@components/MqttWrapper";
-import { LoginForm } from "@components/Login";
 
 // helper to check that it workd
 const Status = () => {
