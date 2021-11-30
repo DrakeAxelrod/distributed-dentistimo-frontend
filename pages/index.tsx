@@ -14,17 +14,19 @@ type Props = {
 const Home: FC<Props> = ({ clinics }) => {
   // for demo purposes
   const { client } = useMqttState();
-  const { message, connectionStatus } = useSubscription("test");
+  //const { message, connectionStatus } = useSubscription("frontend");
   const handleClick = (message: any) => {
-    return client ? client.publish("test", message) : null;
+    return client ? client.publish("frontend", message) : null;
   };
   return (
     <>
       {/* For Demo Purposes */}
-      {/* <button type="button" onClick={() => handleClick("yoyoyo")}>
+      <button
+        type="button"
+        onClick={() => handleClick("sending from frontend")}>
         click me
       </button>
-      <span>{connectionStatus}</span>
+      {/* <span>{connectionStatus}</span>
       <hr />
       <span>{JSON.stringify(message)}</span> */}
       <Map clinics={clinics} />
