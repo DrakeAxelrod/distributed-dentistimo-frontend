@@ -1,7 +1,7 @@
 import { Container, Flex, Spacer } from "@chakra-ui/react";
 import { FC } from "react";
 import { MyWrapper } from "types";
-import { Header } from "@components/Header";
+import { Header } from "./header";
 import Footer from "./Footer";
 
 export const Wrapper: FC<MyWrapper> = ({ children }) => {
