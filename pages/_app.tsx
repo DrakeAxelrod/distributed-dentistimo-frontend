@@ -1,6 +1,6 @@
 import "@lib/utils/log";
 import "@fontsource/nunito";
-import "@styles/global.css";
+import "@styles/global.scss";
 import { Wrapper } from "@components/Wrapper";
 import type { AppProps } from "next/app";
 import { ChakraProvider } from "@chakra-ui/react";

@@ -21,11 +21,11 @@ const Home: FC<Props> = ({ clinics }) => {
   return (
     <>
       {/* For Demo Purposes */}
-      <button
+      {/* <button
         type="button"
         onClick={() => handleClick("sending from frontend")}>
         click me
-      </button>
+      </button> */}
       {/* <span>{connectionStatus}</span>
       <hr />
       <span>{JSON.stringify(message)}</span> */}

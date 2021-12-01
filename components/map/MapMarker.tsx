@@ -1,4 +1,5 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
+import DatePicker from "react-datepicker";
 import {
   Text,
   Popover,
@@ -14,6 +15,14 @@ import {
   Box,
   Image,
   chakra,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 type Props = {
@@ -45,6 +54,7 @@ export const MyMarker: FC<Props> = ({ clinic, lat, lng, value }) => {
   const thursday = openinghours.thursday ? openinghours.thursday : "Closed";
   const friday = openinghours.friday ? openinghours.friday : "Closed";
   const availSize = "sm";
+
   return (
     <chakra.div {...markerProps}>
       <Popover placement="right-end">
