@@ -15,16 +15,12 @@ import {
   Box,
   Image,
   chakra,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
 } from "@chakra-ui/react";
+import { BookAppointmentForm } from "./BookAppointmentForm";
 
+// const BookAppointmentButton: FC = () => {
+//   return <Button colorScheme="teal">Book an Appointment</Button>;
+// }
 type Props = {
   lat: number;
   lng: number;
@@ -66,23 +62,22 @@ export const MyMarker: FC<Props> = ({ clinic, lat, lng, value }) => {
             src="/pin.svg"
           />
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent alignItems="center">
           <PopoverArrow />
           <PopoverCloseButton />
           <PopoverHeader fontSize="2xl">
             <Heading fontFamily="Nunito">{name}</Heading>
           </PopoverHeader>
           <PopoverBody>
-            <Stack>
+            <Stack direction="column" alignItems="center">
               <Text fontSize="md">Address: {address}</Text>
-              <Box as="hr" />
               <Heading fontSize="md">Availability</Heading>
               <Text fontSize={availSize}>Monday: {monday}</Text>
               <Text fontSize={availSize}>Tuesday: {tuesday}</Text>
               <Text fontSize={availSize}>Wednesday: {wednesday}</Text>
               <Text fontSize={availSize}>Thursday: {thursday}</Text>
               <Text fontSize={availSize}>Friday: {friday}</Text>
-              <Button colorScheme="teal">Book an Appointment</Button>
+              <BookAppointmentForm />
             </Stack>
           </PopoverBody>
         </PopoverContent>
