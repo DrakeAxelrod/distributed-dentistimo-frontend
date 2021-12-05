@@ -19,7 +19,6 @@ const Status = () => {
    * - Error: printed in console too
    */
   const { connectionStatus } = useMqttState();
-
   return <h1>{`Status: ${connectionStatus}`}</h1>;
 };
 
