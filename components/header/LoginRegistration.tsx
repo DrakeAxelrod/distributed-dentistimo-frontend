@@ -38,24 +38,43 @@ type NavItem = {
 export const MenuItem: FC<NavItem> = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [personalNumber, setPersonalNumber] = useState("");
+  const [phone, setPhone] = useState("");
   const { client } = useMqttState();
-  const { message, connectionStatus } = useSubscription("users/authentication");
+  const { message, connectionStatus } = useSubscription("frontend/users/login");
   const [isIdle, setIsIdle] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const isAuth = () => {
-    return message ? message.message === "success" : false;
+    return message ? message.message : "";
   };
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
   const handleSubmit = (topic: string) => {
-    const user = {
-      email: email,
-      password: password,
-    };
+    let user;
+    if (isLogin) {
+      user = {
+        email: email,
+        password: password,
+      };
+    } else {
+      user = {
+        email: email,
+        name: {
+          first: firstName,
+          last: lastName,
+        },
+        personalNumber: personalNumber,
+        phone: phone,
+        password: password,
+      };
+    }
     client ? client.publish(topic, JSON.stringify(user)) : null;
     setIsIdle(true);
     setTimeout(() => {
+      log(isAuth());
       setIsIdle(false);
     }, 5000);
   };
@@ -105,6 +124,54 @@ export const MenuItem: FC<NavItem> = (props) => {
                     placeholder="Enter your email address"
                   />
                 </FormControl>
+                {!isLogin ? (
+                  <>
+                    <FormControl mt={4}>
+                      <FormLabel>First</FormLabel>
+                      <Input
+                        isDisabled={isIdle}
+                        onChange={(event) =>
+                          setFirstName(event.currentTarget.value)
+                        }
+                        type="email"
+                        placeholder="Enter your email address"
+                      />
+                    </FormControl>
+                    <FormControl mt={4}>
+                      <FormLabel>Last</FormLabel>
+                      <Input
+                        isDisabled={isIdle}
+                        onChange={(event) =>
+                          setLastName(event.currentTarget.value)
+                        }
+                        type="email"
+                        placeholder="Enter your email address"
+                      />
+                    </FormControl>
+                    <FormControl mt={4}>
+                      <FormLabel>Personal Number</FormLabel>
+                      <Input
+                        isDisabled={isIdle}
+                        onChange={(event) =>
+                          setPersonalNumber(event.currentTarget.value)
+                        }
+                        type="email"
+                        placeholder="Enter your email address"
+                      />
+                    </FormControl>
+                    <FormControl mt={4}>
+                      <FormLabel>Phone Number</FormLabel>
+                      <Input
+                        isDisabled={isIdle}
+                        onChange={(event) =>
+                          setPhone(event.currentTarget.value)
+                        }
+                        type="email"
+                        placeholder="Enter your email address"
+                      />
+                    </FormControl>
+                  </>
+                ) : null}
                 <FormControl mt={4}>
                   <FormLabel>Password</FormLabel>
                   <InputGroup size="md">
