@@ -74,7 +74,6 @@ export const MenuItem: FC<NavItem> = (props) => {
     client ? client.publish(topic, JSON.stringify(user)) : null;
     setIsIdle(true);
     setTimeout(() => {
-      log(isAuth());
       setIsIdle(false);
     }, 5000);
   };
