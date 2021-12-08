@@ -6,10 +6,13 @@ import {
   useColorModeValue,
   Box,
 } from "@chakra-ui/react";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { FaTooth } from "react-icons/fa";
 import { ThemeToggle } from "../ThemeToggle";
-import { MenuItem, Nav } from "./LoginRegistration";
+import { Login } from "./Login";
+import { Register } from "./Register";
+import { Profile } from "./Profile";
+import store from "../../store";
 
 const Logo: FC = () => {
   const color = useColorModeValue("teal.500", "teal.100");
@@ -28,35 +31,31 @@ const Logo: FC = () => {
         fontFamily="Nunito"
         color={color}
         fontSize={["1rem", "2rem"]}>
-        {"Dentistimo"}
+        Dentistimo
       </Heading>
     </Flex>
   );
 };
-
-export const NavItems = [
-  {
-    title: "Login",
-    type: Nav.Login,
-    req: "users/login",
-  },
-  {
-    title: "Register",
-    type: Nav.Register,
-    req: "users/register",
-  },
-];
-
 export const Header: FC = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const bool = store.getState()._id !== "";
+  if (bool) {
+    setLoggedIn(true);
+  }
   return (
     <Box as="header" m="0" p="0">
       <Flex h="8vh" maxH="8vh" minW="100%">
         <Logo />
         <Spacer />
         <Flex direction="row" align="center" pr="0.5rem">
-          {NavItems.map(({ title, type, req }, index) => (
-            <MenuItem key={index} title={title} type={type} req={req} />
-          ))}
+          {loggedIn ? (
+            <Profile />
+          ) : (
+            <>
+              <Login />
+              <Register />
+            </>
+          )}
           <ThemeToggle />
         </Flex>
       </Flex>

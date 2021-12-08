@@ -7,6 +7,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { theme } from "@styles/theme";
 import { useMqttState } from "mqtt-react-hooks";
 import { MqttWrapper } from "@components/MqttWrapper";
+import { Provider } from "react-redux";
+import store from "../store";
 
 // helper to check that it workd
 const Status = () => {
@@ -28,9 +30,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <ChakraProvider resetCSS={true} theme={theme}>
       <MqttWrapper>
-        <Wrapper>
-          <Component {...pageProps} />
-        </Wrapper>
+        <Provider store={store}>
+          <Wrapper>
+            <Component {...pageProps} />
+          </Wrapper>
+        </Provider>
       </MqttWrapper>
     </ChakraProvider>
   );

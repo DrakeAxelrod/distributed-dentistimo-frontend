@@ -77,7 +77,7 @@ export const MyMarker: FC<Props> = ({ clinic, lat, lng, value }) => {
               <Text fontSize={availSize}>Wednesday: {wednesday}</Text>
               <Text fontSize={availSize}>Thursday: {thursday}</Text>
               <Text fontSize={availSize}>Friday: {friday}</Text>
-              <BookAppointmentForm />
+              <BookAppointmentForm clinic={clinic} />
             </Stack>
           </PopoverBody>
         </PopoverContent>

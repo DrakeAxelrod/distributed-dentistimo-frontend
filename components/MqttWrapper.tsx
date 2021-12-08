@@ -10,6 +10,7 @@ export const MqttWrapper: FC<MyWrapper> = ({ children }) => {
         protocol: "wss",
         username: process.env.BROKER_USERNAME,
         password: process.env.BROKER_PASSWORD,
+        reconnectPeriod: 1000,
       }}>
       {children}
     </Connector>

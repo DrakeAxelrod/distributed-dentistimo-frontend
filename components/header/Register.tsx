@@ -21,21 +21,11 @@ import {
   InputRightElement,
   InputGroup,
 } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
+import store from "../../store";
 
-export enum Nav {
-  Register,
-  Login,
-}
-
-type NavItem = {
-  title: string;
-  type: Nav.Register | Nav.Login;
-  req: string;
-};
-
-export const MenuItem: FC<NavItem> = (props) => {
+export const Register: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -43,44 +33,46 @@ export const MenuItem: FC<NavItem> = (props) => {
   const [personalNumber, setPersonalNumber] = useState("");
   const [phone, setPhone] = useState("");
   const { client } = useMqttState();
-  const { message, connectionStatus } = useSubscription("frontend/users/login");
+  const { message, connectionStatus } = useSubscription(
+    "frontend/users/register",
+  );
+
   const [isIdle, setIsIdle] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const isAuth = () => {
-    return message ? message.message : "";
-  };
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
   const handleSubmit = (topic: string) => {
-    let user;
-    if (isLogin) {
-      user = {
-        email: email,
-        password: password,
-      };
-    } else {
-      user = {
-        email: email,
-        name: {
-          first: firstName,
-          last: lastName,
-        },
-        personalNumber: personalNumber,
-        phone: phone,
-        password: password,
-      };
-    }
+    const user = {
+      email: email,
+      name: {
+        first: firstName,
+        last: lastName,
+      },
+      personalNumber: personalNumber,
+      phone: phone,
+      password: password,
+    };
     client ? client.publish(topic, JSON.stringify(user)) : null;
     setIsIdle(true);
-    setTimeout(() => {
+    const authorized = setTimeout(() => {
       setIsIdle(false);
-    }, 5000);
+      if (connectionStatus) {
+        if (message) {
+          const msg = message.message ? message.message : "{}";
+          const data = JSON.parse(msg as string);
+          if (data === {}) {
+            return false;
+          } else {
+            store.dispatch({ type: "REGISTER", payload: data });
+            return true;
+          }
+        }
+      }
+    }, 1000);
   };
-
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isLogin = props.type === Nav.Login;
   return (
     <>
       <Button
@@ -97,7 +89,7 @@ export const MenuItem: FC<NavItem> = (props) => {
           outline: "transparent",
         }}>
         <Text fontSize={["1rem", "2rem"]} fontFamily="Nunito" color={color}>
-          {props.title}
+          Register
         </Text>
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
@@ -105,9 +97,7 @@ export const MenuItem: FC<NavItem> = (props) => {
         <ModalContent>
           <ModalHeader pt="3rem" pb="0rem">
             <Box textAlign="center">
-              <Heading>
-                {isLogin ? "Login to Your Account" : "Register Your Account"}
-              </Heading>
+              <Heading>Register Your Account</Heading>
             </Box>
           </ModalHeader>
           <ModalCloseButton />
@@ -123,54 +113,46 @@ export const MenuItem: FC<NavItem> = (props) => {
                     placeholder="Enter your email address"
                   />
                 </FormControl>
-                {!isLogin ? (
-                  <>
-                    <FormControl mt={4}>
-                      <FormLabel>First</FormLabel>
-                      <Input
-                        isDisabled={isIdle}
-                        onChange={(event) =>
-                          setFirstName(event.currentTarget.value)
-                        }
-                        type="email"
-                        placeholder="Enter your email address"
-                      />
-                    </FormControl>
-                    <FormControl mt={4}>
-                      <FormLabel>Last</FormLabel>
-                      <Input
-                        isDisabled={isIdle}
-                        onChange={(event) =>
-                          setLastName(event.currentTarget.value)
-                        }
-                        type="email"
-                        placeholder="Enter your email address"
-                      />
-                    </FormControl>
-                    <FormControl mt={4}>
-                      <FormLabel>Personal Number</FormLabel>
-                      <Input
-                        isDisabled={isIdle}
-                        onChange={(event) =>
-                          setPersonalNumber(event.currentTarget.value)
-                        }
-                        type="email"
-                        placeholder="Enter your email address"
-                      />
-                    </FormControl>
-                    <FormControl mt={4}>
-                      <FormLabel>Phone Number</FormLabel>
-                      <Input
-                        isDisabled={isIdle}
-                        onChange={(event) =>
-                          setPhone(event.currentTarget.value)
-                        }
-                        type="email"
-                        placeholder="Enter your email address"
-                      />
-                    </FormControl>
-                  </>
-                ) : null}
+                <FormControl mt={4}>
+                  <FormLabel>First</FormLabel>
+                  <Input
+                    isDisabled={isIdle}
+                    onChange={(event) =>
+                      setFirstName(event.currentTarget.value)
+                    }
+                    type="email"
+                    placeholder="Enter your email address"
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>Last</FormLabel>
+                  <Input
+                    isDisabled={isIdle}
+                    onChange={(event) => setLastName(event.currentTarget.value)}
+                    type="email"
+                    placeholder="Enter your email address"
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>Personal Number</FormLabel>
+                  <Input
+                    isDisabled={isIdle}
+                    onChange={(event) =>
+                      setPersonalNumber(event.currentTarget.value)
+                    }
+                    type="email"
+                    placeholder="Enter your email address"
+                  />
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>Phone Number</FormLabel>
+                  <Input
+                    isDisabled={isIdle}
+                    onChange={(event) => setPhone(event.currentTarget.value)}
+                    type="email"
+                    placeholder="Enter your email address"
+                  />
+                </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>Password</FormLabel>
                   <InputGroup size="md">
@@ -207,11 +189,6 @@ export const MenuItem: FC<NavItem> = (props) => {
                   </InputGroup>
                 </FormControl>
                 <Stack isInline justifyContent="space-between" mt={4}>
-                  {isLogin ? (
-                    <Box>
-                      <Checkbox>Remember Me</Checkbox>
-                    </Box>
-                  ) : null}
                   <Box>
                     <Link color="teal.500">Forgot your password?</Link>
                   </Box>
@@ -219,7 +196,7 @@ export const MenuItem: FC<NavItem> = (props) => {
                 {/* This is our modal button */}
                 <Button
                   // type="submit"
-                  onClick={() => handleSubmit(props.req)}
+                  onClick={() => handleSubmit("users/register")}
                   colorScheme="teal"
                   width="full"
                   mt={4}>
@@ -231,7 +208,7 @@ export const MenuItem: FC<NavItem> = (props) => {
                     size="md"
                     display={isIdle ? "block" : "none"}
                   />
-                  {isIdle ? null : isLogin ? "Login" : "Register"}
+                  {isIdle ? null : "Register"}
                 </Button>
               </form>
             </Box>

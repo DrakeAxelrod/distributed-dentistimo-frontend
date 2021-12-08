@@ -23,10 +23,17 @@
       "@types/*": ["public"],
       "@styles/*": ["styles/*"],
       "@styles": ["styles"],
-      "@lib/*": ["lib/*"]
+      "@lib/*": ["lib/*"],
+      "@store/*": ["store/*"],
+      "@store": ["store/"]
     },
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/Login.tsx.old"
+  ],
   "exclude": ["node_modules"]
 }
