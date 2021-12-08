@@ -32,8 +32,8 @@ function userReducer(state = initialState, action: any) {
         _id: action.payload._id,
         email: action.payload.email,
         name: {
-          first: action.payload.first,
-          last: action.payload.first,
+          first: action.payload.name.first,
+          last: action.payload.name.last,
         },
         personalNumber: action.payload.personalNumber,
         phone: action.payload.phone,

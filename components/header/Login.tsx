@@ -44,8 +44,15 @@ export const Login: FC = () => {
     if (message) {
       if (message.message) {
         const data = JSON.parse(message.message as string);
-        console.log(data);
-        store.dispatch({ type: "LOGIN", payload: data });
+        console.log(data.message.name.first);
+        if (data.authenticated === false) {
+          console.log("incorrect");
+        } else {
+          store.dispatch({
+            type: "LOGIN",
+            payload: data.message,
+          });
+        }
       }
     }
   }, [message]);

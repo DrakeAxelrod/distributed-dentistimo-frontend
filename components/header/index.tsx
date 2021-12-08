@@ -41,7 +41,6 @@ const MenuItems: FC = () => {
   const [loggedIn, setLoggedIn] = useState(store.getState()._id !== "");
   const unsubscribe = store.subscribe(() => {
     if (store.getState()._id !== "") {
-      console.log("here");
       setLoggedIn(true);
     } else {
       setLoggedIn(false);
