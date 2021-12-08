@@ -24,6 +24,7 @@ import {
 import { FC, useEffect, useState } from "react";
 import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
 import store from "../../store";
+import { truncate } from "fs/promises";
 
 export const Register: FC = () => {
   const [email, setEmail] = useState("");
@@ -36,40 +37,36 @@ export const Register: FC = () => {
   const { message, connectionStatus } = useSubscription(
     "frontend/users/register",
   );
-
+  //console.log(message)
   const [isIdle, setIsIdle] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
-  const handleSubmit = (topic: string) => {
-    const user = {
-      email: email,
-      name: {
-        first: firstName,
-        last: lastName,
-      },
-      personalNumber: personalNumber,
-      phone: phone,
-      password: password,
-    };
-    client ? client.publish(topic, JSON.stringify(user)) : null;
-    setIsIdle(true);
-    const authorized = setTimeout(() => {
-      setIsIdle(false);
-      if (connectionStatus) {
-        if (message) {
-          const msg = message.message ? message.message : "{}";
-          const data = JSON.parse(msg as string);
-          if (data === {}) {
-            return false;
-          } else {
-            store.dispatch({ type: "REGISTER", payload: data });
-            return true;
-          }
-        }
+  useEffect(() => {
+    if (message) {
+      if (message.message) {
+        const data = JSON.parse(message.message as string);
+        store.dispatch({ type: "REGISTER", payload: data });
       }
-    }, 1000);
+    }
+  }, [message]);
+  const handleSubmit = (topic: string) => {
+    client
+      ? client.publish(
+          topic,
+          JSON.stringify({
+            email: email,
+            name: {
+              first: firstName,
+              last: lastName,
+            },
+            personalNumber: personalNumber,
+            phone: phone,
+            password: password,
+          }),
+        )
+      : null;
   };
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();

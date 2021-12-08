@@ -10,14 +10,14 @@ import {
   ModalBody,
   useColorModeValue,
   Box,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
 import Calendar from "react-calendar";
 import { Global } from "@emotion/react";
 import style from "@styles/calender";
+import store from "@store";
 // activeStartDate?: Date | undefined;
 // allowPartialRange?: boolean | undefined;
 // calendarType?: CalendarType | undefined;
@@ -78,9 +78,9 @@ import style from "@styles/calender";
 // value?: Date | Date[] | null | undefined;
 // view?: Detail | undefined;
 type Props = {
-  lat: number;
-  lng: number;
-  value?: string;
+  // lat: number;
+  // lng: number;
+  // value?: string;
   clinic: {
     name: string;
     owner?: string;
@@ -98,7 +98,6 @@ type Props = {
 };
 export const BookAppointmentForm: FC<Props> = (props) => {
   const { client } = useMqttState();
-  const [isIdle, setIsIdle] = useState(false);
   const { message, connectionStatus } = useSubscription(
     "frontend/bookings/all",
   );
@@ -106,11 +105,6 @@ export const BookAppointmentForm: FC<Props> = (props) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const future = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
   const onChange = (selectedItem: Date) => {
-    // console.log({
-    //   day: selectedItem.getDate(),
-    //   month: selectedItem.getMonth() + 1,
-    //   year: selectedItem.getFullYear(),
-    // });
     client
       ? client.publish(
           "bookings/all",
@@ -145,7 +139,10 @@ export const BookAppointmentForm: FC<Props> = (props) => {
   return (
     <>
       <Global styles={style} />
-      <Button onClick={onOpen} colorScheme="teal">
+      <Button
+        isDisabled={store.getState()._id === ""}
+        onClick={onOpen}
+        colorScheme="teal">
         Book Appointment
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
@@ -166,19 +163,12 @@ export const BookAppointmentForm: FC<Props> = (props) => {
             />
             <Text>availble appointment</Text>
             <Button
+              isDisabled={store.getState()._id === ""}
               my="1rem"
               onClick={() => {}}
               colorScheme="teal"
               width="full"
               mt={4}>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="teal.500"
-                color="orange.500"
-                size="md"
-                display={false ? "block" : "none"}
-              />
               Confirm
             </Button>
           </ModalBody>

@@ -36,26 +36,59 @@ const Logo: FC = () => {
     </Flex>
   );
 };
-export const Header: FC = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const bool = store.getState()._id !== "";
-  if (bool) {
-    setLoggedIn(true);
+
+const MenuItems: FC = () => {
+  const [loggedIn, setLoggedIn] = useState(store.getState()._id !== "");
+  const unsubscribe = store.subscribe(() => {
+    if (store.getState()._id !== "") {
+      console.log("here");
+      setLoggedIn(true);
+    } else {
+      setLoggedIn(false);
+    }
+  });
+  if (loggedIn) {
+    return (
+      <Box>
+        <Profile />
+      </Box>
+    );
+  } else {
+    return (
+      <Box>
+        <Login />
+        <Register />
+      </Box>
+    );
   }
+};
+
+export const Header: FC = () => {
+  // const [loggedIn, setLoggedIn] = useState(store.getState()._id !== "");
+  // const unsubscribe = store.subscribe(() => {
+  //   if (store.getState()._id !== "") {
+  //     console.log("here")
+  //     setLoggedIn(true)
+  //   } else {
+  //     setLoggedIn(false);
+  //   }
+  // })
+  console.log(store.getState());
   return (
     <Box as="header" m="0" p="0">
       <Flex h="8vh" maxH="8vh" minW="100%">
         <Logo />
         <Spacer />
         <Flex direction="row" align="center" pr="0.5rem">
-          {loggedIn ? (
+          <MenuItems />
+          {/* {loggedIn ? (
             <Profile />
           ) : (
             <>
               <Login />
               <Register />
             </>
-          )}
+          )} */}
           <ThemeToggle />
         </Flex>
       </Flex>

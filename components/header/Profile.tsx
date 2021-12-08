@@ -26,40 +26,31 @@ import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
 import store from "../../store";
 
 export const Profile: FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { client } = useMqttState();
+  const user = store.getState();
   const { message, connectionStatus } = useSubscription([
     "frontend/users/login",
   ]);
+  const [userName, setUserName] = useState(user.name.first);
 
   const [isIdle, setIsIdle] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
-  const handleSubmit = (topic: string) => {
-    const user = {
-      email: email,
-      password: password,
-    };
-    client ? client.publish(topic, JSON.stringify(user)) : null;
-    setIsIdle(true);
-    const authorized = setTimeout(() => {
-      setIsIdle(false);
-      if (connectionStatus) {
-        if (message) {
-          const msg = message.message ? message.message : "{}";
-          const data = JSON.parse(msg as string);
-          if (data === {}) {
-            return false;
-          } else {
-            store.dispatch({ type: "LOGIN", payload: data });
-            return true;
-          }
-        }
-      }
-    }, 1000);
+  const handleSubmit = () => {
+    store.dispatch({
+      type: "LOGOUT",
+      payload: {
+        _id: "",
+        email: "",
+        name: {
+          first: "",
+          last: "",
+        },
+        personalNumber: "",
+        phone: "",
+      },
+    });
   };
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -79,7 +70,7 @@ export const Profile: FC = () => {
           outline: "transparent",
         }}>
         <Text fontSize={["1rem", "2rem"]} fontFamily="Nunito" color={color}>
-          Profile
+          {userName || ""}
         </Text>
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
@@ -87,7 +78,7 @@ export const Profile: FC = () => {
         <ModalContent>
           <ModalHeader pt="3rem" pb="0rem">
             <Box textAlign="center">
-              <Heading>Login to Your Account</Heading>
+              <Heading>{`${userName}'s Profile`}</Heading>
             </Box>
           </ModalHeader>
           <ModalCloseButton />
@@ -95,15 +86,43 @@ export const Profile: FC = () => {
             <Box my={4} textAlign="left">
               <form>
                 <FormControl>
-                  <FormLabel>Email address</FormLabel>
-                  <Input
+                  <FormLabel>{`Email: ${user.email}`}</FormLabel>
+                  {/* <Input
                     isDisabled={isIdle}
                     onChange={(event) => setEmail(event.currentTarget.value)}
                     type="email"
                     placeholder="Enter your email address"
-                  />
+                  /> */}
                 </FormControl>
-                <FormControl mt={4}>
+                <FormControl>
+                  <FormLabel>{`first: ${user.name.first}`}</FormLabel>
+                  <FormLabel>{`last: ${user.name.last}`}</FormLabel>
+                  {/* <Input
+                    isDisabled={isIdle}
+                    onChange={(event) => setEmail(event.currentTarget.value)}
+                    type="email"
+                    placeholder="Enter your email address"
+                  /> */}
+                </FormControl>
+                <FormControl>
+                  <FormLabel>{`Personal Number: ${user.personalNumber}`}</FormLabel>
+                  {/* <Input
+                    isDisabled={isIdle}
+                    onChange={(event) => setEmail(event.currentTarget.value)}
+                    type="email"
+                    placeholder="Enter your email address"
+                  /> */}
+                </FormControl>
+                <FormControl>
+                  <FormLabel>{`Phone Number: ${user.phone}`}</FormLabel>
+                  {/* <Input
+                    isDisabled={isIdle}
+                    onChange={(event) => setEmail(event.currentTarget.value)}
+                    type="email"
+                    placeholder="Enter your email address"
+                  /> */}
+                </FormControl>
+                {/* <FormControl mt={4}>
                   <FormLabel>Password</FormLabel>
                   <InputGroup size="md">
                     <Input
@@ -135,33 +154,17 @@ export const Profile: FC = () => {
                         onClick={handlePasswordShow}>
                         {showPassword ? "Hide" : "Show"}
                       </Button>
-                    </InputRightElement>
-                  </InputGroup>
-                </FormControl>
-                <Stack isInline justifyContent="space-between" mt={4}>
-                  <Box>
-                    <Checkbox>Remember Me</Checkbox>
-                  </Box>
-                  <Box>
-                    <Link color="teal.500">Forgot your password?</Link>
-                  </Box>
-                </Stack>
+                    </InputRightElement> */}
+                {/* </InputGroup>
+                </FormControl> */}
                 {/* This is our modal button */}
                 <Button
                   // type="submit"
-                  onClick={() => handleSubmit("users/login")}
+                  onClick={() => handleSubmit()}
                   colorScheme="teal"
                   width="full"
                   mt={4}>
-                  <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="teal.500"
-                    color="orange.500"
-                    size="md"
-                    display={isIdle ? "block" : "none"}
-                  />
-                  {isIdle ? null : "Login"}
+                  logout
                 </Button>
               </form>
             </Box>

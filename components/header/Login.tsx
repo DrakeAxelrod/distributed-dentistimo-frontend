@@ -26,7 +26,9 @@ import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
 import store from "../../store";
 
 export const Login: FC = () => {
+  const user = store.getState();
   const [email, setEmail] = useState("");
+  // const [rememberMe, setRememberMe] = useState(false);
   const [password, setPassword] = useState("");
   const { client } = useMqttState();
   const { message, connectionStatus } = useSubscription([
@@ -38,28 +40,25 @@ export const Login: FC = () => {
   const handlePasswordShow = () => {
     setShowPassword(!showPassword);
   };
-  const handleSubmit = (topic: string) => {
-    const user = {
-      email: email,
-      password: password,
-    };
-    client ? client.publish(topic, JSON.stringify(user)) : null;
-    setIsIdle(true);
-    const authorized = setTimeout(() => {
-      setIsIdle(false);
-      if (connectionStatus) {
-        if (message) {
-          const msg = message.message ? message.message : "{}";
-          const data = JSON.parse(msg as string);
-          if (data === {}) {
-            return false;
-          } else {
-            store.dispatch({ type: "LOGIN", payload: data });
-            return true;
-          }
-        }
+  useEffect(() => {
+    if (message) {
+      if (message.message) {
+        const data = JSON.parse(message.message as string);
+        console.log(data);
+        store.dispatch({ type: "LOGIN", payload: data });
       }
-    }, 1000);
+    }
+  }, [message]);
+  const handleSubmit = (topic: string) => {
+    client
+      ? client.publish(
+          topic,
+          JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        )
+      : null;
   };
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -138,14 +137,14 @@ export const Login: FC = () => {
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <Stack isInline justifyContent="space-between" mt={4}>
+                {/* <Stack isInline justifyContent="space-between" mt={4}>
                   <Box>
-                    <Checkbox>Remember Me</Checkbox>
+                    <Checkbox defaultIsChecked={rememberMe} >Remember Me</Checkbox>
                   </Box>
                   <Box>
                     <Link color="teal.500">Forgot your password?</Link>
                   </Box>
-                </Stack>
+                </Stack> */}
                 {/* This is our modal button */}
                 <Button
                   // type="submit"
@@ -153,15 +152,7 @@ export const Login: FC = () => {
                   colorScheme="teal"
                   width="full"
                   mt={4}>
-                  <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="teal.500"
-                    color="orange.500"
-                    size="md"
-                    display={isIdle ? "block" : "none"}
-                  />
-                  {isIdle ? null : "Login"}
+                  Login
                 </Button>
               </form>
             </Box>
