@@ -98,7 +98,7 @@ export const Register: FC = () => {
           )
         : null;
     }
-  };
+  }; //super stealth comment
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
