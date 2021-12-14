@@ -157,7 +157,7 @@ export const Register: FC = () => {
                       setFirstName(event.currentTarget.value)
                     }
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="first name"
                   />
                 </FormControl>
                 <FormControl mt={4}>
@@ -166,7 +166,7 @@ export const Register: FC = () => {
                     isDisabled={isIdle}
                     onChange={(event) => setLastName(event.currentTarget.value)}
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="last name"
                   />
                 </FormControl>
                 <FormControl mt={4}>
@@ -185,7 +185,7 @@ export const Register: FC = () => {
                       setPersonalNumber(event.currentTarget.value)
                     }
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="Enter your personal number"
                   />
                 </FormControl>
                 <FormControl mt={4}>
@@ -202,7 +202,7 @@ export const Register: FC = () => {
                     isDisabled={isIdle}
                     onChange={(event) => setPhone(event.currentTarget.value)}
                     type="email"
-                    placeholder="Enter your email address"
+                    placeholder="Enter your phone number"
                   />
                 </FormControl>
                 <FormControl mt={4}>
