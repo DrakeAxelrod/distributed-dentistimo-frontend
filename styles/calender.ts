@@ -71,7 +71,7 @@ const styles = css`
     padding: calc(0.75em / 0.75) calc(0.5em / 0.75);
   }
   .react-calendar__month-view__days__day--weekend {
-    color: #d10000;
+    color: #757575;
   }
   .react-calendar__month-view__days__day--neighboringMonth {
     color: #757575;

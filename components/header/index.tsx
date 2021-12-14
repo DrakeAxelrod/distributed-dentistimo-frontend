@@ -72,7 +72,6 @@ export const Header: FC = () => {
   //     setLoggedIn(false);
   //   }
   // })
-  console.log(store.getState());
   return (
     <Box as="header" m="0" p="0">
       <Flex h="8vh" maxH="8vh" minW="100%">
@@ -80,14 +79,6 @@ export const Header: FC = () => {
         <Spacer />
         <Flex direction="row" align="center" pr="0.5rem">
           <MenuItems />
-          {/* {loggedIn ? (
-            <Profile />
-          ) : (
-            <>
-              <Login />
-              <Register />
-            </>
-          )} */}
           <ThemeToggle />
         </Flex>
       </Flex>

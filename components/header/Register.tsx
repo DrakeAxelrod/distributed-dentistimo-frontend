@@ -2,7 +2,6 @@ import {
   Heading,
   Button,
   Text,
-  Stack,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -12,10 +11,8 @@ import {
   ModalBody,
   useColorModeValue,
   Box,
-  Link,
   FormLabel,
   Input,
-  Checkbox,
   FormControl,
   Spinner,
   InputRightElement,
@@ -24,10 +21,23 @@ import {
 import { FC, useEffect, useState } from "react";
 import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
 import store from "../../store";
-import { truncate } from "fs/promises";
+
+const EMAIL_REGEX =
+  /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+
+const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+
+const PERSONAL_NUMBER_REGEX =
+  /\b(((20)((0[0-9])|(2[0-2])))|(([1][^0-8])?\d{2}))((0[1-9])|1[0-2])((0[1-9])|(2[0-9])|(3[01]))[-+]?\d{4}[,.]?\b/;
+
+const PHONE_REGEX = /^(([+]46)\s*(7)|07)[02369]\s*(\d{4})\s*(\d{3})$/;
 
 export const Register: FC = () => {
   const [email, setEmail] = useState("");
+  const [validEmail, setValidEmail] = useState(true);
+  const [validPassword, setValidPassword] = useState(true);
+  const [validPersonalNumber, setValidPersonalNumber] = useState(true);
+  const [validPhone, setValidPhone] = useState(true);
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -45,28 +55,49 @@ export const Register: FC = () => {
   };
   useEffect(() => {
     if (message) {
-      if (message.message) {
+      const t = message.topic;
+      if (message.message && t === "frontend/users/register") {
         const data = JSON.parse(message.message as string);
         store.dispatch({ type: "REGISTER", payload: data });
       }
     }
   }, [message]);
   const handleSubmit = (topic: string) => {
-    client
-      ? client.publish(
-          topic,
-          JSON.stringify({
-            email: email,
-            name: {
-              first: firstName,
-              last: lastName,
-            },
-            personalNumber: personalNumber,
-            phone: phone,
-            password: password,
-          }),
-        )
-      : null;
+    let canCreate = true;
+    if (!EMAIL_REGEX.test(email)) {
+      canCreate = false;
+      setValidEmail(false);
+    }
+    if (!PASSWORD_REGEX.test(password)) {
+      canCreate = false;
+      setValidPassword(false);
+    }
+    if (!PERSONAL_NUMBER_REGEX.test(personalNumber)) {
+      canCreate = false;
+      setValidPassword(false);
+    }
+    if (!PHONE_REGEX.test(phone)) {
+      canCreate = false;
+      setValidPassword(false);
+    }
+
+    if (canCreate) {
+      client
+        ? client.publish(
+            topic,
+            JSON.stringify({
+              email: String(email),
+              name: {
+                first: String(firstName),
+                last: String(lastName),
+              },
+              personalNumber: personalNumber,
+              phone: phone,
+              password: String(password),
+            }),
+          )
+        : null;
+    }
   };
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -102,7 +133,15 @@ export const Register: FC = () => {
             <Box my={4} textAlign="left">
               <form>
                 <FormControl>
-                  <FormLabel>Email address</FormLabel>
+                  <FormLabel>
+                    Email address{" "}
+                    <Text
+                      color="red"
+                      fontSize="xs"
+                      display={validEmail ? "none" : "block"}>
+                      Invalid e-mail
+                    </Text>
+                  </FormLabel>
                   <Input
                     isDisabled={isIdle}
                     onChange={(event) => setEmail(event.currentTarget.value)}
@@ -131,7 +170,15 @@ export const Register: FC = () => {
                   />
                 </FormControl>
                 <FormControl mt={4}>
-                  <FormLabel>Personal Number</FormLabel>
+                  <FormLabel>
+                    Personal Number{" "}
+                    <Text
+                      color="red"
+                      fontSize="xs"
+                      display={validPersonalNumber ? "none" : "block"}>
+                      Invalid formatted personal number
+                    </Text>
+                  </FormLabel>
                   <Input
                     isDisabled={isIdle}
                     onChange={(event) =>
@@ -142,7 +189,15 @@ export const Register: FC = () => {
                   />
                 </FormControl>
                 <FormControl mt={4}>
-                  <FormLabel>Phone Number</FormLabel>
+                  <FormLabel>
+                    Phone Number{" "}
+                    <Text
+                      color="red"
+                      fontSize="xs"
+                      display={validPhone ? "none" : "block"}>
+                      Invalid phone number
+                    </Text>
+                  </FormLabel>
                   <Input
                     isDisabled={isIdle}
                     onChange={(event) => setPhone(event.currentTarget.value)}
@@ -151,7 +206,15 @@ export const Register: FC = () => {
                   />
                 </FormControl>
                 <FormControl mt={4}>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>
+                    Password{" "}
+                    <Text
+                      fontSize="xs"
+                      color={validPassword ? "gray.400" : "red"}>
+                      Minimum eight characters, at least one letter and one
+                      number.
+                    </Text>
+                  </FormLabel>
                   <InputGroup size="md">
                     <Input
                       isDisabled={isIdle}
@@ -185,14 +248,7 @@ export const Register: FC = () => {
                     </InputRightElement>
                   </InputGroup>
                 </FormControl>
-                <Stack isInline justifyContent="space-between" mt={4}>
-                  <Box>
-                    <Link color="teal.500">Forgot your password?</Link>
-                  </Box>
-                </Stack>
-                {/* This is our modal button */}
                 <Button
-                  // type="submit"
                   onClick={() => handleSubmit("users/register")}
                   colorScheme="teal"
                   width="full"

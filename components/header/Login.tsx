@@ -2,7 +2,6 @@ import {
   Heading,
   Button,
   Text,
-  Stack,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -12,12 +11,9 @@ import {
   ModalBody,
   useColorModeValue,
   Box,
-  Link,
   FormLabel,
   Input,
-  Checkbox,
   FormControl,
-  Spinner,
   InputRightElement,
   InputGroup,
 } from "@chakra-ui/react";
@@ -26,10 +22,10 @@ import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
 import store from "../../store";
 
 export const Login: FC = () => {
-  const user = store.getState();
   const [email, setEmail] = useState("");
   // const [rememberMe, setRememberMe] = useState(false);
   const [password, setPassword] = useState("");
+  const [passMsg, setPassMsg] = useState("");
   const { client } = useMqttState();
   const { message, connectionStatus } = useSubscription([
     "frontend/users/login",
@@ -42,11 +38,11 @@ export const Login: FC = () => {
   };
   useEffect(() => {
     if (message) {
-      if (message.message) {
+      const t = message.topic;
+      if (message.message && t === "frontend/users/login") {
         const data = JSON.parse(message.message as string);
-        console.log(data.message.name.first);
         if (data.authenticated === false) {
-          console.log("incorrect");
+          setPassMsg(data.message);
         } else {
           store.dispatch({
             type: "LOGIN",
@@ -93,7 +89,12 @@ export const Login: FC = () => {
         <ModalContent>
           <ModalHeader pt="3rem" pb="0rem">
             <Box textAlign="center">
-              <Heading>Login to Your Account</Heading>
+              <Heading>
+                Login to Your Account{" "}
+                <Text fontSize="xs" color={"red"}>
+                  {passMsg}
+                </Text>
+              </Heading>
             </Box>
           </ModalHeader>
           <ModalCloseButton />

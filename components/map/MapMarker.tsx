@@ -1,5 +1,4 @@
-import React, { FC, useState } from "react";
-import DatePicker from "react-datepicker";
+import React, { FC } from "react";
 import {
   Text,
   Popover,
@@ -9,10 +8,8 @@ import {
   PopoverBody,
   PopoverArrow,
   PopoverCloseButton,
-  Button,
   Stack,
   Heading,
-  Box,
   Image,
   chakra,
 } from "@chakra-ui/react";

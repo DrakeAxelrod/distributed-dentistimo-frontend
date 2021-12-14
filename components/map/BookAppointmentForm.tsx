@@ -12,6 +12,8 @@ import {
   Box,
   Text,
   Select,
+  AlertIcon,
+  Alert,
 } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 import { useMqttState, useSubscription, IMessage } from "mqtt-react-hooks";
@@ -107,50 +109,122 @@ const parseTimeSlot = (appointment: any) => {
     endMinute === 0 ? "00" : endMinute
   }`;
 };
+
+const unParseTimeSlot = (slot: String) => {
+  //'10:00-16:00'
+  const times = slot.split("-");
+  const start = times[0].split(":");
+  const end = times[1].split(":");
+  return {
+    start: {
+      hour: start[0],
+      minute: start[1],
+    },
+    end: {
+      hour: end[0],
+      minute: end[1],
+    },
+  };
+};
+
 export const BookAppointmentForm: FC<Props> = (props) => {
+  const user = store.getState();
   const { client } = useMqttState();
-  const { message, connectionStatus } = useSubscription(
+  const { message, connectionStatus } = useSubscription([
     "frontend/bookings/available",
-  );
+    "frontend/bookings/confirm",
+  ]);
   const color = useColorModeValue("teal.500", "teal.100");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isConfirm, setConfirm] = useState(false);
+  const [newBooking, setNewBooking] = useState({
+    clinic: "",
+    patient: {
+      email: "",
+      name: {
+        first: "",
+        last: "",
+      },
+      personalNumber: "",
+      phone: 0,
+    },
+    time: {
+      start: {
+        hour: 0,
+        minute: 0,
+      },
+    },
+    issuance: "",
+    _id: "",
+    __v: 0,
+  });
   const [appointments, setAppointments] = useState([]);
+  const [bookingInformation, setBookingInformation] = useState({
+    clinic: "",
+    date: {
+      dayName: "",
+      day: "",
+      month: "",
+      year: "",
+    },
+  });
   const [timeSlot, setTimeSlot] = useState("");
   const [canBook, setCanBook] = useState(true);
-  const future = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+  const future = new Date(new Date().setFullYear(new Date().getFullYear() + 5));
   const onChange = (selectedItem: Date) => {
-    client
-      ? client.publish(
-          "bookings/available",
-          JSON.stringify({
-            clinic: props.clinic,
-            date: {
-              dayName: selectedItem.toLocaleDateString("en-US", {
-                weekday: "long",
-              }),
-              day: selectedItem.getDate(),
-              month: selectedItem.getMonth() + 1,
-              year: selectedItem.getFullYear(),
-            },
-          }),
-        )
-      : null;
+    const dayName = selectedItem.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+    if (dayName !== "Saturday" && dayName !== "Sunday") {
+      const data = {
+        clinic: props.clinic,
+        date: {
+          dayName: dayName,
+          day: selectedItem.getDate(),
+          month: selectedItem.getMonth() + 1,
+          year: selectedItem.getFullYear(),
+        },
+      };
+      setBookingInformation(data as any);
+      client
+        ? client.publish("bookings/available", JSON.stringify(data))
+        : null;
+    }
   };
   const onTimeSelect = (event: any) => {
     setTimeSlot(event.target.value);
     setCanBook(false);
   };
   const confirmBooking = () => {
-    //book appointment
+    client
+      ? client.publish(
+          "bookings/confirm",
+          JSON.stringify({
+            clinic: props.clinic.name,
+            patient: user,
+            time: unParseTimeSlot(timeSlot),
+            date: bookingInformation.date,
+          }),
+        )
+      : null;
   };
   useEffect(() => {
     if (message) {
-      if (message.message) {
+      const t = message.topic;
+      if (t === "frontend/bookings/confirm") {
+        const newBooking = JSON.parse(message.message as string);
+        if (props.clinic.name === newBooking.clinic.name) {
+          setNewBooking(newBooking);
+          onClose();
+          setConfirm(true);
+        }
+      }
+      if (t === "frontend/bookings/available") {
         const data = JSON.parse(message.message as string);
         setAppointments(data);
       }
     }
-  }, [message]);
+  }, [message, onClose, props.clinic.name]);
   return (
     <>
       <Global styles={style} />
@@ -160,6 +234,35 @@ export const BookAppointmentForm: FC<Props> = (props) => {
         colorScheme="teal">
         Book Appointment
       </Button>
+
+      <Modal
+        isOpen={isConfirm}
+        onClose={() => setConfirm(false)}
+        isCentered={true}>
+        <ModalOverlay />
+        <ModalContent alignItems="center">
+          <ModalCloseButton />
+          <ModalBody>
+            <Heading>Booking confirmed!</Heading>
+            <Text>
+              Thank you,{" "}
+              {newBooking.patient.name.first +
+                " " +
+                newBooking.patient.name.last}{" "}
+              we at {props.clinic.name} look forward to seeing on{" "}
+              {newBooking.time.start.hour +
+                ":" +
+                (newBooking.time.start.minute === 0
+                  ? "00"
+                  : newBooking.time.start.minute)}
+              {" - "}
+              {`${bookingInformation.date.dayName}, ${bookingInformation.date.year}-${bookingInformation.date.month}-${bookingInformation.date.day}`}
+              , remember to keep smiling, be proud of those teeth!
+            </Text>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
       <Modal isOpen={isOpen} onClose={onClose} isCentered={true}>
         <ModalOverlay />
         <ModalContent alignItems="center">
@@ -171,8 +274,8 @@ export const BookAppointmentForm: FC<Props> = (props) => {
           <ModalCloseButton />
           <ModalBody>
             <Calendar
-              activeStartDate={new Date()}
-              defaultActiveStartDate={new Date()}
+              //activeStartDate={new Date()}
+              //defaultActiveStartDate={new Date()}
               minDate={new Date()}
               maxDate={future}
               onChange={onChange}
