@@ -25,10 +25,10 @@ import store from "../../store";
 const EMAIL_REGEX =
   /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
 
-const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+const PASSWORD_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*]).{8,}$/;
 
-const PERSONAL_NUMBER_REGEX =
-  /\b(((20)((0[0-9])|(2[0-2])))|(([1][^0-8])?\d{2}))((0[1-9])|1[0-2])((0[1-9])|(2[0-9])|(3[01]))[-+]?\d{4}[,.]?\b/;
+const PERSONAL_NUMBER_REGEX = /^\d{6,8}[-|(\s)]{0,1}\d{4}$/;
 
 const PHONE_REGEX = /^(([+]46)\s*(7)|07)[02369]\s*(\d{4})\s*(\d{3})$/;
 
@@ -74,11 +74,11 @@ export const Register: FC = () => {
     }
     if (!PERSONAL_NUMBER_REGEX.test(personalNumber)) {
       canCreate = false;
-      setValidPassword(false);
+      setValidPersonalNumber(false);
     }
     if (!PHONE_REGEX.test(phone)) {
       canCreate = false;
-      setValidPassword(false);
+      setValidPhone(false);
     }
 
     if (canCreate) {
@@ -144,7 +144,10 @@ export const Register: FC = () => {
                   </FormLabel>
                   <Input
                     isDisabled={isIdle}
-                    onChange={(event) => setEmail(event.currentTarget.value)}
+                    onChange={(event) => {
+                      setValidEmail(true);
+                      return setEmail(event.currentTarget.value);
+                    }}
                     type="email"
                     placeholder="Enter your email address"
                   />
@@ -181,9 +184,10 @@ export const Register: FC = () => {
                   </FormLabel>
                   <Input
                     isDisabled={isIdle}
-                    onChange={(event) =>
-                      setPersonalNumber(event.currentTarget.value)
-                    }
+                    onChange={(event) => {
+                      setValidPersonalNumber(true);
+                      return setPersonalNumber(event.currentTarget.value);
+                    }}
                     type="email"
                     placeholder="Enter your personal number"
                   />
@@ -200,7 +204,10 @@ export const Register: FC = () => {
                   </FormLabel>
                   <Input
                     isDisabled={isIdle}
-                    onChange={(event) => setPhone(event.currentTarget.value)}
+                    onChange={(event) => {
+                      setValidPhone(true);
+                      return setPhone(event.currentTarget.value);
+                    }}
                     type="email"
                     placeholder="Enter your phone number"
                   />
@@ -211,16 +218,18 @@ export const Register: FC = () => {
                     <Text
                       fontSize="xs"
                       color={validPassword ? "gray.400" : "red"}>
-                      Minimum eight characters, at least one letter and one
-                      number.
+                      Should contain at least one uppercase character, one
+                      lowercase character, one number, one special character,
+                      and a minimum length of 8 characters.
                     </Text>
                   </FormLabel>
                   <InputGroup size="md">
                     <Input
                       isDisabled={isIdle}
-                      onChange={(event) =>
-                        setPassword(event.currentTarget.value)
-                      }
+                      onChange={(event) => {
+                        setValidPassword(true);
+                        return setPassword(event.currentTarget.value);
+                      }}
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
                     />
